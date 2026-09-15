@@ -1,0 +1,15 @@
+{
+  "nombre": "Café Lumbre",
+  "open": true,
+  "showPrices": true,
+  "horario": "8:00 a 22:00, de lunes a domingo",
+  "nota": "Pedidos fuera de horario se atienden al abrir.",
+  "items": [
+    { "name": "Espresso doble", "tag": "Espresso", "desc": "Café de Chiapas · taza 6 oz · crema densa", "price": 55, "img": "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=900&q=80&auto=format&fit=crop", "available": true },
+    { "name": "Latte de lavanda", "tag": "Firma de la casa", "desc": "Doble shot · leche vaporizada · lavanda de Veracruz", "price": 85, "img": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900&q=80&auto=format&fit=crop", "available": true },
+    { "name": "Cappuccino clásico", "tag": "Espresso", "desc": "Espresso + microespuma · arte latte en taza", "price": 70, "img": "https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=900&q=80&auto=format&fit=crop", "available": true },
+    { "name": "Cold brew tinto", "tag": "Fríos", "desc": "12 h de extracción en frío · nota a chocolate", "price": 65, "img": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=80&auto=format&fit=crop", "available": true },
+    { "name": "Croissant de almendra", "tag": "Panadería", "desc": "Hojaldre de la casa · relleno de crema de almendra", "price": 65, "img": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=900&q=80&auto=format&fit=crop", "available": true },
+    { "name": "Sándwich de pavo ahumado", "tag": "Comida", "desc": "Panes de la casa · queso oaxaca · pesto", "price": 120, "img": "https://images.unsplash.com/photo-1521302080334-4bebac2763a6?w=900&q=80&auto=format&fit=crop", "available": true }
+  ]
+}

@@ -2,10 +2,15 @@
   'use strict';
 
   const WA = '52155XXXXXXXX';
+  const SHEET_URL = '';
+  const REFRESH_MS = 30000;
+
   const $ = (s, c) => (c || document).querySelector(s);
   const $$ = (s, c) => Array.prototype.slice.call((c || document).querySelectorAll(s));
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-  const money = (n) => '$' + n.toLocaleString('es-MX');
+  const money = (n) => (n == null || n === 0) ? '' : '$' + n.toLocaleString('es-MX');
+
+  let DATA = null;
 
   const heroImg = $('.hero-img');
   const revealNow = () => heroImg.classList.add('on');
@@ -39,11 +44,15 @@
   const cartBar = $('#cartBar');
   const cartChip = $('#cartChip');
   const cartTotal = $('#cartTotal');
+
+  const showPrices = () => !DATA || DATA.showPrices !== false;
+
   function renderCart() {
     const n = cart.length;
     cartBar.hidden = n === 0;
     cartChip.textContent = n;
-    cartTotal.textContent = n ? money(cart.reduce((a, b) => a + b.price, 0)) : '';
+    const total = cart.reduce((a, b) => a + b.price, 0);
+    cartTotal.textContent = n ? money(total) || (n + ' items') : '';
   }
   function addToCart(name, price) {
     cart.push({ name, price });
@@ -52,11 +61,54 @@
   }
   cartBar.addEventListener('click', () => {
     if (!cart.length) return;
-    const lines = cart.map((c) => '- ' + c.name + ' (' + money(c.price) + ')').join('\n');
-    const total = cart.reduce((a, b) => a + b.price, 0);
-    const msg = 'Hola, quiero mi pedido en Café Lumbre:\n' + lines + '\nTotal: ' + money(total) + '\n¿Confirmas y me indicas cómo pago?';
+    const withPrices = showPrices();
+    const lines = cart.map((c) => '- ' + c.name + (withPrices && c.price ? ' (' + money(c.price) + ')' : '')).join('\n');
+    let msg = 'Hola, quiero mi pedido en ' + (DATA && DATA.nombre ? DATA.nombre : 'su negocio') + ':\n' + lines;
+    if (withPrices) msg += '\nTotal: ' + money(cart.reduce((a, b) => a + b.price, 0));
+    msg += '\n¿Confirmas y me indicas cómo pago?';
     window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
   });
+
+  /* ---------------- avisos ---------------- */
+  const toastEl = $('#toast');
+  let toastTimer = null;
+  function toast(text) {
+    toastEl.textContent = text;
+    toastEl.hidden = false;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toastEl.classList.remove('show'); setTimeout(() => { toastEl.hidden = true; }, 300); }, 3200);
+  }
+
+  const banner = $('#stateBanner');
+  function stateBanner() {
+    if (!DATA) { banner.hidden = true; return; }
+    if (DATA.open === false) {
+      banner.hidden = false;
+      banner.textContent = 'Cerrado ahorita' + (DATA.horario ? ' · abrimos de ' + DATA.horario : '') + (DATA.nota ? '. ' + DATA.nota : '');
+    } else {
+      banner.hidden = true;
+    }
+  }
+
+  function itemByName(name) {
+    if (!DATA) return null;
+    for (let i = 0; i < DATA.items.length; i++) {
+      if (DATA.items[i].name === name) return DATA.items[i];
+    }
+    return null;
+  }
+  function addBlocked(log) {
+    if (DATA && DATA.open === false) {
+      toast((DATA.horario ? 'Abrimos de ' + DATA.horario : 'Estamos cerrados') + (DATA.nota ? '. ' + DATA.nota : ''));
+      return true;
+    }
+    if (log && log.available === false) {
+      toast(log.name + ' se acabó por hoy. ¡Vuelve mañana!');
+      return true;
+    }
+    return false;
+  }
 
   /* ---------------- recorrido ---------------- */
   const walk = $('#recorre');
@@ -112,10 +164,14 @@
   $$('.hot', walk).forEach((b) => {
     b.addEventListener('click', () => {
       if (b.dataset.add) {
-        addToCart(b.dataset.add, parseInt(b.dataset.price, 10));
+        const item = b.dataset.add;
+        const log = itemByName(item);
+        if (addBlocked(log)) return;
+        addToCart(item, log ? log.price : parseInt(b.dataset.price, 10) || 0);
         const dot = $('span', b); if (dot) dot.textContent = '✓';
         setTimeout(() => { if (dot && b.dataset.add) dot.textContent = '◉'; }, 900);
       } else if (b.dataset.book) {
+        if (DATA && DATA.open === false) { addBlocked(null); return; }
         const sel = $('#rZona');
         for (let i = 0; i < sel.options.length; i++) {
           if (sel.options[i].value === b.dataset.book) { sel.value = sel.options[i].value; break; }
@@ -141,36 +197,61 @@
     pano.addEventListener('pointercancel', stop);
   }
 
-  /* ---------------- carta digital ---------------- */
-  const MENU = [
-    { name: 'Espresso doble', desc: 'Café de Chiapas · taza 6 oz · crema densa', price: 55, tag: 'Espresso', img: 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=900&q=80&auto=format&fit=crop' },
-    { name: 'Latte de lavanda', desc: 'Doble shot · leche vaporizada · lavanda de Veracruz', price: 85, tag: 'Firma de la casa', img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900&q=80&auto=format&fit=crop' },
-    { name: 'Cappuccino clásico', desc: 'Espresso + microespuma · arte latte en taza', price: 70, tag: 'Espresso', img: 'https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=900&q=80&auto=format&fit=crop' },
-    { name: 'Cold brew tinto', desc: '12 h de extracción en frío · nota a chocolate', price: 65, tag: 'Fríos', img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=80&auto=format&fit=crop' },
-    { name: 'Croissant de almendra', desc: 'Hojaldre de la casa · relleno de crema de almendra', price: 65, tag: 'Panadería', img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=900&q=80&auto=format&fit=crop' },
-    { name: 'Sándwich de pavo ahumado', desc: 'Panes de la casa · queso oaxaca · pesto', price: 120, tag: 'Comida', img: 'https://images.unsplash.com/photo-1521302080334-4bebac2763a6?w=900&q=80&auto=format&fit=crop' },
-  ];
+  /* ---------------- carta digital (se re-renderiza al refrescar datos) ---------------- */
   const menuEl = $('#menu');
-  MENU.forEach((m) => {
-    const it = document.createElement('article');
-    it.className = 'menu-item';
-    it.innerHTML = '<img src="' + m.img + '" alt="' + m.name + '" loading="lazy" /><div class="mi-body"><span class="mi-tag">' + m.tag + '</span><b class="mi-name">' + m.name + '</b><p class="mi-desc">' + m.desc + '</p><div class="mi-foot"><span class="mi-price">' + money(m.price) + '</span><button class="add-btn" type="button">Agregar</button></div></div>';
-    const btn = $('.add-btn', it);
-    btn.addEventListener('click', () => {
-      addToCart(m.name, m.price);
-      btn.textContent = '✓ Agregado';
-      btn.classList.add('added');
-      setTimeout(() => { btn.textContent = 'Agregar'; btn.classList.remove('added'); }, 1000);
+  function renderMenu() {
+    const items = DATA.items;
+    menuEl.innerHTML = '';
+    items.forEach((m) => {
+      const off = m.available === false;
+      const it = document.createElement('article');
+      it.className = 'menu-item' + (off ? ' off' : '');
+      const priceHtml = showPrices() && m.price ? '<span class="mi-price">' + money(m.price) + '</span>' : '<span class="mi-price na">Pregunta por el precio</span>';
+      const btnHtml = off ? '<span class="add-btn sold" style="cursor:default">Agotado por hoy</span>' : '<button class="add-btn" type="button">Agregar</button>';
+      it.innerHTML = '<img src="' + m.img + '" alt="' + m.name + '" loading="lazy" /><div class="mi-body"><span class="mi-tag">' + m.tag + '</span><b class="mi-name">' + m.name + '</b><p class="mi-desc">' + m.desc + '</p><div class="mi-foot">' + priceHtml + btnHtml + '</div></div>';
+      const btn = $('.add-btn', it);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          if (addBlocked(m)) return;
+          addToCart(m.name, m.price || 0);
+          btn.textContent = '✓ Agregado';
+          btn.classList.add('added');
+          setTimeout(() => { btn.textContent = 'Agregar'; btn.classList.remove('added'); }, 1000);
+        });
+      }
+      menuEl.appendChild(it);
     });
-    menuEl.appendChild(it);
-  });
+  }
+
+  /* ---------------- datos: Sheets primero, negocio.json de respaldo ---------------- */
+  async function fetchData() {
+    let src = null;
+    if (SHEET_URL) {
+      try { const r = await fetch(SHEET_URL, { cache: 'no-store' }); if (r.ok) src = await r.json(); } catch (e) { src = null; }
+    }
+    if (!src || !src.items || !src.items.length) {
+      try {
+        const r = await fetch('negocio.json?t=' + Date.now(), { cache: 'no-store' });
+        if (r.ok) src = await r.json();
+      } catch (e) { src = null; }
+    }
+    if (!src || !src.items || !src.items.length) return;
+    src.items = src.items.filter((i) => i && i.name);
+    DATA = src;
+    renderMenu();
+    stateBanner();
+  }
+
+  fetchData();
+  setInterval(fetchData, REFRESH_MS);
 
   /* ---------------- reserva ---------------- */
   const today = new Date();
   today.setDate(today.getDate() + 1);
   $('#rDay').min = today.toISOString().split('T')[0];
   $('#rSend').addEventListener('click', () => {
-    const msg = 'Hola, quiero reservar en Café Lumbre:\nZona: ' + $('#rZona').value + '\nDía: ' + $('#rDay').value + '\nHora: ' + $('#rHour').value + '\nPersonas: ' + $('#rPeople').value + '\n¿Confirman?';
+    if (DATA && DATA.open === false) { addBlocked(null); return; }
+    const msg = 'Hola, quiero reservar en ' + (DATA && DATA.nombre ? DATA.nombre : 'su negocio') + ':\nZona: ' + $('#rZona').value + '\nDía: ' + $('#rDay').value + '\nHora: ' + $('#rHour').value + '\nPersonas: ' + $('#rPeople').value + '\n¿Confirman?';
     window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
   });
 
@@ -200,7 +281,10 @@
 
   function askCart() {
     if (cart.length) {
-      bot('Llevas ' + cart.length + ' producto(s): ' + cart.map((c) => c.name).join(', ') + ' · ' + money(cart.reduce((a, b) => a + b.price, 0)) + '. ¿Confirmamos tu pedido?');
+      const withPrices = showPrices();
+      let resumen = cart.map((c) => c.name).join(', ');
+      if (withPrices) resumen += ' · ' + money(cart.reduce((a, b) => a + b.price, 0));
+      bot('Llevas ' + cart.length + ' producto(s): ' + resumen + '. ¿Confirmamos tu pedido?');
       chips([
         { label: 'Confirmar pedido ➤', run: () => { setTimeout(() => cartBar.click(), 350); } },
         { label: 'Seguir viendo la carta', run: () => go('#carta') },
@@ -221,7 +305,7 @@
         chips([
           { label: 'Quiero pedir', run: askCart },
           { label: 'Reservar mesa', run: () => { bot('¡Claro! Te llevo a la reserva:'); setTimeout(() => go('#reserva'), 350); } },
-          { label: '¿Horario?', run: () => bot('Abierto de 8:00 a 22:00, todos los días ☀️') },
+          { label: '¿Horario?', run: () => bot('Abierto de ' + (DATA && DATA.horario ? DATA.horario : '8:00 a 22:00') + ' ☀️') },
           { label: '¿Hacen envíos?', run: () => bot('Sí, entregamos en un radio de 4 km en ~30 min. Pide desde la carta y confirma en WhatsApp.') },
         ]);
         setTimeout(() => chatTxt.focus(), 300);
@@ -239,7 +323,7 @@
     if (t.includes('pedir')) { askCart(); return; }
     if (t.includes('reserv')) { bot('Te llevo a la reserva:'); setTimeout(() => go('#reserva'), 350); return; }
     let reply = 'No lo tengo claro 🤔 Prueba con "pedir", "reservar", "horario" o "envíos".';
-    if (t.includes('horario')) reply = 'Abierto de 8:00 a 22:00, de lunes a domingo.';
+    if (t.includes('horario')) reply = 'Abierto de ' + (DATA && DATA.horario ? DATA.horario : '8:00 a 22:00') + ', todos los días.';
     else if (t.includes('envio') || t.includes('domicilio')) reply = 'Sí, envíos en un radio de 4 km en ~30 min. Pide desde la carta.';
     else if (t.includes('hola') || t.includes('buenas')) reply = '¡Hola! ¿Qué te damos hoy? Toca una opción o escríbeme.';
     bot(reply);
@@ -247,7 +331,7 @@
       chips([
         { label: 'Quiero pedir', run: askCart },
         { label: 'Reservar mesa', run: () => { bot('Te llevo a la reserva:'); setTimeout(() => go('#reserva'), 350); } },
-        { label: '¿Horario?', run: () => bot('Abierto de 8:00 a 22:00, todos los días.') },
+        { label: '¿Horario?', run: () => bot('Abierto de ' + (DATA && DATA.horario ? DATA.horario : '8:00 a 22:00') + ', todos los días.') },
       ]);
     }, 150);
   });

@@ -35,6 +35,20 @@ favicon.svg
 - Hotel / glamping → habitaciones tocables, disponibilidad y apartado con depósito.
 
 ## Datos y placeholders por reemplazar
-- `js/app.js` → `WA` (teléfono WhatsApp), `MENU` (carta real con fotos/precios).
+- `js/app.js` → `WA` (teléfono WhatsApp) y `SHEET_URL` (ver abajo).
 - `index.html` → marca, teléfono, dominio canonical (`cafe-lumbre.vercel.app`), fotos.
 - Vistas 360 reales: 3–5 fotos de teléfono en modo panorámico por rincón.
+
+## "Carta en vivo" — el dueño se administra solo (Google Sheets)
+El sitio lee el menú desde un **Google Sheet** que edita el propio cliente; la página
+se actualiza sola cada 30 s (precios, agotados, horario). Sin tocar código.
+
+- Cómo configurarlo (una vez por cliente): ver `admin/Code.gs` (instrucciones arriba
+  del archivo). Resumen: pestañas `Config` y `Carta` → Apps Script → publicar como
+  "Aplicación web" con acceso público → pegar la URL en `js/app.js` → `SHEET_URL`.
+- Mientras `SHEET_URL` está vacío, el sitio usa `negocio.json` como respaldo (editalo
+  localmente para probar: cambia `"available": false`, `"open": false` o
+  `"showPrices": false` y recarga la página).
+- Estructura de `negocio.json` / pestaña `Carta`:
+  `name | tag | desc | price | img | available (si/no)`.
+  Config: `open`, `showPrices`, `horario`, `nota`.
