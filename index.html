@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Café Lumbre · Entra, recorre y pide en línea | Tu marca</title>
+<meta name="description" content="Recorre nuestro café en 3D, mira la carta en línea, reserva tu mesa y pide por WhatsApp. El café que se vive antes de llegar." />
+<meta name="theme-color" content="#f4ecdf" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="canonical" href="https://cafe-lumbre.vercel.app/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_MX" />
+<meta property="og:site_name" content="Café Lumbre" />
+<meta property="og:title" content="Café Lumbre · Entra, recorre y pide en línea" />
+<meta property="og:description" content="Recorrido inmersivo por el café, carta digital, reservas y pedidos por WhatsApp." />
+<meta property="og:url" content="https://cafe-lumbre.vercel.app/" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  "name": "Café Lumbre",
+  "description": "Café de especialidad con recorrido inmersivo, carta digital y pedidos por WhatsApp.",
+  "url": "https://cafe-lumbre.vercel.app/",
+  "telephone": "+5255XXXXXXXX",
+  "priceRange": "$",
+  "openingHours": "Mo-Su 08:00-22:00"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<a class="wa-float" id="waFloat" target="_blank" rel="noopener" href="https://wa.me/52155XXXXXXXX?text=Hola%2C%20quiero%20pedir%20en%20Caf%C3%A9%20Lumbre.">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.6 6.6 0 0 1-2-1.2 7.3 7.3 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4c.1-.2.2-.3.2-.5s0-.3-.1-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3A3 3 0 0 0 7.4 9c0 1.7 1.3 3.4 1.4 3.6s2.5 3.8 6 5.2c.8.3 1.5.5 2 .7.8.2 1.5.2 2.1.1a3.4 3.4 0 0 0 2.4-1.7 3 3 0 0 0 .2-1.7c-.1-.2-.4-.3-.6-.4Z"/></svg>
+</a>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <a class="nav-logo" href="#top"><span>L</span> Café Lumbre <small>especialidad</small></a>
+  <div class="nav-links">
+    <a href="#recorre">Recorre</a>
+    <a href="#carta">Carta</a>
+    <a href="#reserva">Reserva</a>
+    <a href="#visita" class="nav-cta">Pedir en línea</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <img class="hero-img" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1600&q=80&auto=format&fit=crop" alt="Café Lumbre — interior cálido con barra de espresso" fetchpriority="high" />
+  <div class="hero-shade"></div>
+  <div class="hero-in">
+    <p class="kicker">Café de especialidad · Centro</p>
+    <h1 class="hero-title">Entra, recorre, <br/><span class="cyc" id="cyc">pide.</span></h1>
+    <p class="hero-sub">Camina por el mostrador, el salón y la terraza sin moverte de tu sillón. Cuando elijas, pide en línea y llega por tu café.</p>
+    <div class="hero-cta">
+      <a class="btn btn-solid" href="#recorre">Comenzar el recorrido</a>
+      <a class="btn btn-ghost" href="#carta">Ver la carta</a>
+    </div>
+  </div>
+  <p class="scroll-cue"><span></span> baja para entrar</p>
+</header>
+
+<!-- ================= RECORRIDO INMERSIVO ================= -->
+<section class="walk" id="recorre">
+  <div class="walk-head">
+    <p class="kicker">El recorrido</p>
+    <h2>Pasa por cada rincón <em>antes de ir.</em></h2>
+    <p class="walk-sub">Toca los puntos calientes para pedir, reservar o ver más.</p>
+  </div>
+
+  <div class="walk-scene" id="walkScene">
+    <div class="walk-rail" id="walkRail">
+      <div class="room" data-room="0">
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=1400&q=80&auto=format&fit=crop" alt="El Mostrador" loading="lazy" />
+        <div class="room-hot">
+          <button class="hot" data-add="Espresso doble" data-price="55"><span>◉</span> Espresso <b>$55</b></button>
+          <button class="hot" data-add="Latte de lavanda" data-price="85"><span>◉</span> Latte de lavanda <b>$85</b></button>
+        </div>
+        <div class="room-cap">
+          <b class="room-n">01</b>
+          <p class="room-name">El Mostrador</p>
+          <p class="room-spec">Barra de espresso · máquina La Marzocco · orígenes rotando</p>
+        </div>
+      </div>
+      <div class="room" data-room="1">
+        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1400&q=80&auto=format&fit=crop" alt="El Salón" loading="lazy" />
+        <div class="room-hot">
+          <button class="hot" data-add="Croissant de almendra" data-price="65"><span>◉</span> Croissant <b>$65</b></button>
+          <button class="hot" data-book="Salón"><span>◐</span> Reservar mesa en salón</button>
+        </div>
+        <div class="room-cap">
+          <b class="room-n">02</b>
+          <p class="room-name">El Salón</p>
+          <p class="room-spec">Luz natural · 22 mesas · ventanal a la plaza</p>
+        </div>
+      </div>
+      <div class="room" data-room="2">
+        <img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=1400&q=80&auto=format&fit=crop" alt="La Terraza" loading="lazy" />
+        <div class="room-hot">
+          <button class="hot" data-book="Terraza"><span>◐</span> Reservar mesa en terraza</button>
+          <button class="hot" data-add="Cold brew tinto" data-price="65"><span>◉</span> Cold brew <b>$65</b></button>
+        </div>
+        <div class="room-cap">
+          <b class="room-n">03</b>
+          <p class="room-name">La Terraza</p>
+          <p class="room-spec">Sombras · al aire libre · pet friendly</p>
+        </div>
+      </div>
+      <div class="room" data-room="3">
+        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1400&q=80&auto=format&fit=crop" alt="La Cocina" loading="lazy" />
+        <div class="room-hot">
+          <button class="hot" data-add="Sándwich de pavo ahumado" data-price="120"><span>◉</span> Sándwich <b>$120</b></button>
+          <button class="hot" data-book="Barra"><span>◐</span> Sentarme en la barra</button>
+        </div>
+        <div class="room-cap">
+          <b class="room-n">04</b>
+          <p class="room-name">La Cocina</p>
+          <p class="room-spec">Cocina abierta · panadería propia · varios de la casa</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="walk-track" id="walkTrack" aria-hidden="true">
+      <span data-t="0" class="on"></span><span data-t="1"></span><span data-t="2"></span><span data-t="3"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VISTA 360 ================= -->
+<section class="wrap section" id="pano">
+  <div class="section-head">
+    <p class="kicker">Vista 360</p>
+    <h2>Míralo <em>girando</em> el celular o arrastra.</h2>
+    <p class="walk-sub">Panorámica del salón·terraza capturada con teléfono. Arrastra para mirar a los lados.</p>
+  </div>
+  <div class="pano reveal" id="panoWrap">
+    <div class="pano-hint">⟵ arrastra para mirar ⟶</div>
+    <div class="pano-lane" id="panoLane">
+      <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=2600&q=80&auto=format&fit=crop" alt="Panorámica del café" />
+      <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=2600&q=80&auto=format&fit=crop" alt="Panorámica del café (continuación)" aria-hidden="true" />
+    </div>
+  </div>
+</section>
+
+<!-- ================= CARTA DIGITAL ================= -->
+<section class="wrap section" id="carta">
+  <div class="section-head">
+    <p class="kicker">Carta digital</p>
+    <h2>Pide desde aquí. <em>Va directo a la barra.</em></h2>
+    <p class="walk-sub">Agrega lo que quieras y confirma tu pedido en WhatsApp al final.</p>
+  </div>
+
+  <div class="menu reveal" id="menu"></div>
+</section>
+
+<!-- ================= RESERVA ================= -->
+<section class="wrap section" id="reserva">
+  <div class="section-head">
+    <p class="kicker">Reservación</p>
+    <h2>Aparta tu mesa <em>en 20 segundos.</em></h2>
+  </div>
+
+  <div class="resv-card reveal">
+    <div class="resv-grid">
+      <label>Zona
+        <select id="rZona" class="sel">
+          <option value="Salón">Salón</option>
+          <option value="Terraza">Terraza</option>
+          <option value="Barra">Barra</option>
+        </select>
+      </label>
+      <label>Día
+        <input id="rDay" class="sel" type="date" />
+      </label>
+      <label>Hora
+        <select id="rHour" class="sel">
+          <option>12:00</option><option>13:00</option><option>15:00</option>
+          <option>17:00</option><option>19:00</option><option>20:30</option>
+        </select>
+      </label>
+      <label>Personas
+        <select id="rPeople" class="sel">
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>6</option><option>8+</option>
+        </select>
+      </label>
+    </div>
+    <button class="btn btn-solid big" id="rSend" type="button">Confirmar por WhatsApp</button>
+    <p class="resv-note">Confirmamos en menos de 10 min en horario de atención.</p>
+  </div>
+</section>
+
+<!-- ================= CTA FINAL ================= -->
+<section class="cta-final" id="visita">
+  <img class="cta-bg" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1600&q=80&auto=format&fit=crop" alt="Café de noche" loading="lazy" />
+  <div class="cta-shade"></div>
+  <div class="cta-in wrap">
+    <p class="kicker">Pide en línea</p>
+    <h2>Tu café te espera.</h2>
+    <p class="cta-text">Elige de la carta, paga en línea y llega a la barra — o lo llevamos a tu casa.</p>
+    <a class="btn btn-solid big" href="#carta">Ver carta y pedir</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div>
+    <b>Café Lumbre</b>
+    <p>Demo creada por Tu marca · tuagencia@ejemplo.com</p>
+  </div>
+  <p class="foot-note">Sitio de muestra para presentar el concepto "recorre, elige y compra" — se adapta a cafés, restaurantes, spás, barberías, tiendas y hoteles. Marca, fotos, carta y precios se reemplazan por los del negocio real.</p>
+</footer>
+
+<!-- ================= CHAT IA ================= -->
+<button class="cb-fab" id="cbFab" type="button" aria-label="Abrir chat">💬 El Barista</button>
+<div class="chat" id="chat" hidden>
+  <div class="chat-head" id="chatHead">
+    <b>Barista AI</b><small>Escribe o toca una opción</small>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-qs" id="chatQs"></div>
+  <form class="chat-in" id="chatIn">
+    <input id="chatTxt" type="text" placeholder="Escribe tu mensaje…" autocomplete="off" />
+    <button class="btn btn-solid" type="submit">➤</button>
+  </form>
+</div>
+
+<!-- ================= CARRITO FLOTANTE ================= -->
+<button class="cart-bar" id="cartBar" hidden>
+  <span id="cartChip" class="cart-chip">0</span> Ver mi pedido
+  <span id="cartTotal" class="cart-total">—</span>
+</button>
+
+<script src="js/app.js" defer></script>
+</body>
+</html>
