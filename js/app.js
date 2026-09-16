@@ -244,7 +244,7 @@
     const decBtn = e.target.closest('[data-dec]');
     const incBtn = e.target.closest('[data-inc]');
     if (!addBtn && !decBtn && !incBtn) return;
-    const name = (addBtn || decBtn || incBtn).getAttribute('data-name');
+    const name = (addBtn || decBtn || incBtn).closest('[data-name]').getAttribute('data-name');
     const m = DATA.items.find((x) => x.name === name);
     if (!m) return;
     if (decBtn) { removeFromCart(m.name); return; }
