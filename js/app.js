@@ -3,6 +3,7 @@
 
   const WA = '52155XXXXXXXX';
   const SHEET_URL = '';
+  const CSV_URL = '';
   const REFRESH_MS = 30000;
 
   const $ = (s, c) => (c || document).querySelector(s);
@@ -223,11 +224,50 @@
     });
   }
 
-  /* ---------------- datos: Sheets primero, negocio.json de respaldo ---------------- */
+  /* ---------------- datos: Sheets (JSON o CSV) y negocio.json de respaldo ---------------- */
+  function parseCSV(text) {
+    const rows = [];
+    let cur = '', row = [], q = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) {
+        if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+        else cur += ch;
+      } else if (ch === '"') { q = true; }
+      else if (ch === ',') { row.push(cur.trim()); cur = ''; }
+      else if (ch === '\n' || ch === '\r') { row.push(cur.trim()); cur = ''; if (row.length) rows.push(row); row = []; }
+      else cur += ch;
+    }
+    if (cur !== '' || row.length) { row.push(cur.trim()); rows.push(row); }
+    return rows;
+  }
+  function itemsFromSheet(rows) {
+    const items = [];
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r || !r[0]) continue;
+      const price = Number((r[3] || '').replace(/[^0-9.]/g, ''));
+      const av = String(r[5] || 'si').trim().toLowerCase();
+      items.push({
+        name: r[0], tag: r[1] || '', desc: r[2] || '',
+        price: price > 0 ? price : null,
+        img: r[4] || '',
+        available: !(av === 'no' || av === 'n' || av === 'false' || av === '0' || av === 'agotado'),
+      });
+    }
+    return items;
+  }
+
   async function fetchData() {
     let src = null;
     if (SHEET_URL) {
-      try { const r = await fetch(SHEET_URL, { cache: 'no-store' }); if (r.ok) src = await r.json(); } catch (e) { src = null; }
+      try { const r = await fetch(SHEET_URL, { cache: 'no-store' }); if (r.ok) src = { items: (await r.json()).items }; } catch (e) { src = null; }
+    }
+    if (!src && CSV_URL) {
+      try {
+        const r = await fetch(CSV_URL, { cache: 'no-store' });
+        if (r.ok) src = { items: itemsFromSheet(parseCSV(await r.text())) };
+      } catch (e) { src = null; }
     }
     if (!src || !src.items || !src.items.length) {
       try {
