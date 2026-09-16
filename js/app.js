@@ -258,9 +258,16 @@
       const head = String(r[0]).trim().toUpperCase();
       if (head === 'CONFIG') { inConfig = true; continue; }
       if (inConfig) {
-        const k = String(r[0]).trim().toLowerCase();
-        const v = (r[1] || '').trim();
-        if (k && v) config[k] = v;
+        const a = String(r[0] || '').trim();
+        const b = String(r[1] || '').trim();
+        const k = a.toLowerCase();
+        const soloNum = a.replace(/[^0-9]/g, '');
+        if (k === 'wa' && b) { config.wa = b; }
+        else if (/^wa\d+$/.test(k) && b) { config[k] = b; }
+        else if (k === 'email' && b) { config.email = b; }
+        else if (/^email\d+$/.test(k) && b) { config[k] = b; }
+        else if (soloNum.length >= 10 && !config.wa) { config.wa = a; }
+        else if (k && b) { config[k] = b; }
         continue;
       }
       const price = Number((r[3] || '').replace(/[^0-9.]/g, ''));
