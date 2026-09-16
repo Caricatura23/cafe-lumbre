@@ -225,6 +225,18 @@ html:not(.js) .hero-img { opacity: 1; }
 .add-btn:hover { background: var(--terra2); }
 .add-btn.added { background: #2f9e5f; }
 .add-btn.sold { background: #b9ad9d; color: #fff; opacity: 0.85; }
+.qty {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--terra); color: #fff; border-radius: 999px; padding: 4px;
+}
+.qty b { font-size: 0.95rem; min-width: 22px; text-align: center; }
+.q-by {
+  all: unset; cursor: pointer; width: 30px; height: 30px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 800; background: rgba(255,255,255,0.18);
+  transition: background 0.2s var(--ease);
+}
+.q-by:hover { background: rgba(255,255,255,0.35); }
 .menu-item.off img { filter: grayscale(1) opacity(0.5); }
 .menu-item.off .mi-name { color: var(--mocha); }
 .mi-price.na { font-family: var(--body); font-size: 0.9rem; font-weight: 700; color: var(--mocha); }

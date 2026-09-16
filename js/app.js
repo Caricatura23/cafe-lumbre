@@ -57,33 +57,42 @@
     revealEls.forEach((el) => el.classList.add('in'));
   }
 
-  /* ---------------- carrito ---------------- */
-  const cart = [];
+/* ---------------- carrito (con cantidades) ---------------- */
+  const cart = {}; // nombre -> { price, qty }
   const cartBar = $('#cartBar');
   const cartChip = $('#cartChip');
   const cartTotal = $('#cartTotal');
 
   const showPrices = () => !DATA || DATA.showPrices !== false;
 
+  const cartCount = () => Object.keys(cart).reduce((a, k) => a + cart[k].qty, 0);
+  const cartSum = () => Object.keys(cart).reduce((a, k) => a + cart[k].price * cart[k].qty, 0);
+
   function renderCart() {
-    const n = cart.length;
+    const n = cartCount();
     cartBar.hidden = n === 0;
     cartChip.textContent = n;
-    const total = cart.reduce((a, b) => a + b.price, 0);
-    cartTotal.textContent = n ? money(total) || (n + ' items') : '';
+    cartTotal.textContent = n ? money(cartSum()) : '';
   }
   function addToCart(name, price) {
-    cart.push({ name, price });
+    cart[name] = { price: price || 0, qty: (cart[name] ? cart[name].qty : 0) + 1 };
     renderCart();
+    renderMenu();
     if (cartBar.animate) cartBar.animate([{ transform: 'translateX(-50%) scale(1.1)' }, { transform: 'translateX(-50%) scale(1)' }], { duration: 220 });
   }
+  function removeFromCart(name) {
+    if (!cart[name]) return;
+    cart[name].qty -= 1;
+    if (cart[name].qty <= 0) delete cart[name];
+    renderCart();
+    renderMenu();
+  }
   cartBar.addEventListener('click', () => {
-    if (!cart.length) return;
-    const withPrices = showPrices();
-    const lines = cart.map((c) => '- ' + c.name + (withPrices && c.price ? ' (' + money(c.price) + ')' : '')).join('\n');
-    let msg = 'Hola, quiero mi pedido en ' + (DATA && DATA.nombre ? DATA.nombre : 'su negocio') + ':\n' + lines;
-    if (withPrices) msg += '\nTotal: ' + money(cart.reduce((a, b) => a + b.price, 0));
-    msg += '\n¿Confirmas y me indicas cómo pago?';
+    if (!cartCount()) return;
+    const lines = Object.keys(cart)
+      .map((k) => '- ' + (cart[k].qty > 1 ? cart[k].qty + 'x ' : '') + k)
+      .join('\n');
+    let msg = 'Hola, quiero mi pedido en ' + (DATA && DATA.nombre ? DATA.nombre : 'su negocio') + ':\n' + lines + '\n¿Me confirmas disponibilidad y total, por favor?';
     abrirWhatsApp(msg);
   });
 
@@ -215,21 +224,33 @@
       const it = document.createElement('article');
       it.className = 'menu-item' + (off ? ' off' : '');
       const priceHtml = showPrices() && m.price ? '<span class="mi-price">' + money(m.price) + '</span>' : '<span class="mi-price na">Pregunta por el precio</span>';
-      const btnHtml = off ? '<span class="add-btn sold" style="cursor:default">Agotado por hoy</span>' : '<button class="add-btn" type="button">Agregar</button>';
-      it.innerHTML = '<img src="' + m.img + '" alt="' + m.name + '" loading="lazy" /><div class="mi-body"><span class="mi-tag">' + m.tag + '</span><b class="mi-name">' + m.name + '</b><p class="mi-desc">' + m.desc + '</p><div class="mi-foot">' + priceHtml + btnHtml + '</div></div>';
-      const btn = $('.add-btn', it);
-      if (btn) {
-        btn.addEventListener('click', () => {
-          if (addBlocked(m)) return;
-          addToCart(m.name, m.price || 0);
-          btn.textContent = '✓ Agregado';
-          btn.classList.add('added');
-          setTimeout(() => { btn.textContent = 'Agregar'; btn.classList.remove('added'); }, 1000);
-        });
+      let ctrlHtml;
+      if (off) {
+        ctrlHtml = '<span class="add-btn sold" style="cursor:default">Agotado por hoy</span>';
+      } else if (cart[m.name]) {
+        ctrlHtml = '<span class="qty" data-name="' + m.name.replace(/"/g, '&quot;') + '">' +
+          '<button class="q-by" data-dec type="button">−</button><b>' + cart[m.name].qty + '</b>' +
+          '<button class="q-by" data-inc type="button">+</button></span>';
+      } else {
+        ctrlHtml = '<button class="add-btn" data-add data-name="' + m.name.replace(/"/g, '&quot;') + '" type="button">Agregar</button>';
       }
+      it.innerHTML = '<img src="' + m.img + '" alt="' + m.name + '" loading="lazy" /><div class="mi-body"><span class="mi-tag">' + m.tag + '</span><b class="mi-name">' + m.name + '</b><p class="mi-desc">' + m.desc + '</p><div class="mi-foot">' + priceHtml + ctrlHtml + '</div></div>';
       menuEl.appendChild(it);
     });
   }
+
+  menuEl.addEventListener('click', (e) => {
+    const addBtn = e.target.closest('[data-add]');
+    const decBtn = e.target.closest('[data-dec]');
+    const incBtn = e.target.closest('[data-inc]');
+    if (!addBtn && !decBtn && !incBtn) return;
+    const name = (addBtn || decBtn || incBtn).getAttribute('data-name');
+    const m = DATA.items.find((x) => x.name === name);
+    if (!m) return;
+    if (decBtn) { removeFromCart(m.name); return; }
+    if (addBlocked(m)) return;
+    addToCart(m.name, m.price || 0);
+  });
 
   /* ---------------- datos: Sheets (JSON o CSV) y negocio.json de respaldo ---------------- */
   function parseCSV(text) {
@@ -335,11 +356,11 @@
   const go = (sel) => { const el = document.querySelector(sel); if (el) el.scrollIntoView({ behavior: 'smooth' }); };
 
   function askCart() {
-    if (cart.length) {
+    if (cartCount()) {
       const withPrices = showPrices();
-      let resumen = cart.map((c) => c.name).join(', ');
-      if (withPrices) resumen += ' · ' + money(cart.reduce((a, b) => a + b.price, 0));
-      bot('Llevas ' + cart.length + ' producto(s): ' + resumen + '. ¿Confirmamos tu pedido?');
+      let resumen = Object.keys(cart).map((k) => (cart[k].qty > 1 ? cart[k].qty + 'x ' : '') + k).join(', ');
+      if (withPrices) resumen += ' · ' + money(cartSum());
+      bot('Llevas ' + cartCount() + ' producto(s): ' + resumen + '. ¿Confirmamos tu pedido?');
       chips([
         { label: 'Confirmar pedido ➤', run: () => { setTimeout(() => cartBar.click(), 350); } },
         { label: 'Seguir viendo la carta', run: () => go('#carta') },
