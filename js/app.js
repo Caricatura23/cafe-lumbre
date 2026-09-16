@@ -20,7 +20,7 @@
 
   const cyc = $('#cyc');
   if (cyc) {
-    const list = ['pide.', 'reserva.', 'recorre.'];
+    const list = ['pide.', 'recorre.'];
     const swapEl = (sp, arr, k) => {
       sp.classList.remove('swap');
       void sp.offsetWidth;
@@ -161,26 +161,16 @@
     window.scrollTo({ top: walk.offsetTop + (i / (rooms.length - 1)) * (walk.offsetHeight - window.innerHeight), behavior: 'smooth' });
   }));
 
-  /* hotspots del recorrido: agregar o reservar */
+  /* hotspots del recorrido: agregar productos */
   $$('.hot', walk).forEach((b) => {
     b.addEventListener('click', () => {
-      if (b.dataset.add) {
-        const item = b.dataset.add;
-        const log = itemByName(item);
-        if (addBlocked(log)) return;
-        addToCart(item, log ? log.price : parseInt(b.dataset.price, 10) || 0);
-        const dot = $('span', b); if (dot) dot.textContent = '✓';
-        setTimeout(() => { if (dot && b.dataset.add) dot.textContent = '◉'; }, 900);
-      } else if (b.dataset.book) {
-        if (DATA && DATA.open === false) { addBlocked(null); return; }
-        const sel = $('#rZona');
-        for (let i = 0; i < sel.options.length; i++) {
-          if (sel.options[i].value === b.dataset.book) { sel.value = sel.options[i].value; break; }
-        }
-        const res = $('#reserva');
-        res.scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => { const d = $('#rDay'); d && d.focus(); }, 650);
-      }
+      if (!b.dataset.add) return;
+      const item = b.dataset.add;
+      const log = itemByName(item);
+      if (addBlocked(log)) return;
+      addToCart(item, log ? log.price : parseInt(b.dataset.price, 10) || 0);
+      const dot = $('span', b); if (dot) dot.textContent = '✓';
+      setTimeout(() => { if (dot && b.dataset.add) dot.textContent = '◉'; }, 900);
     });
   });
 
@@ -285,16 +275,6 @@
   fetchData();
   setInterval(fetchData, REFRESH_MS);
 
-  /* ---------------- reserva ---------------- */
-  const today = new Date();
-  today.setDate(today.getDate() + 1);
-  $('#rDay').min = today.toISOString().split('T')[0];
-  $('#rSend').addEventListener('click', () => {
-    if (DATA && DATA.open === false) { addBlocked(null); return; }
-    const msg = 'Hola, quiero reservar en ' + (DATA && DATA.nombre ? DATA.nombre : 'su negocio') + ':\nZona: ' + $('#rZona').value + '\nDía: ' + $('#rDay').value + '\nHora: ' + $('#rHour').value + '\nPersonas: ' + $('#rPeople').value + '\n¿Confirman?';
-    window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
-  });
-
   /* ---------------- chat IA (barista) ---------------- */
   const chat = $('#chat');
   const chatBody = $('#chatBody');
@@ -344,7 +324,6 @@
         bot('Hola, soy el barista virtual ☕ ¿Qué te damos hoy?');
         chips([
           { label: 'Quiero pedir', run: askCart },
-          { label: 'Reservar mesa', run: () => { bot('¡Claro! Te llevo a la reserva:'); setTimeout(() => go('#reserva'), 350); } },
           { label: '¿Horario?', run: () => bot('Abierto de ' + (DATA && DATA.horario ? DATA.horario : '8:00 a 22:00') + ' ☀️') },
           { label: '¿Hacen envíos?', run: () => bot('Sí, entregamos en un radio de 4 km en ~30 min. Pide desde la carta y confirma en WhatsApp.') },
         ]);
@@ -361,8 +340,7 @@
     chatTxt.value = '';
     const t = v.toLowerCase();
     if (t.includes('pedir')) { askCart(); return; }
-    if (t.includes('reserv')) { bot('Te llevo a la reserva:'); setTimeout(() => go('#reserva'), 350); return; }
-    let reply = 'No lo tengo claro 🤔 Prueba con "pedir", "reservar", "horario" o "envíos".';
+    let reply = 'No lo tengo claro 🤔 Prueba con "pedir", "horario" o "envíos".';
     if (t.includes('horario')) reply = 'Abierto de ' + (DATA && DATA.horario ? DATA.horario : '8:00 a 22:00') + ', todos los días.';
     else if (t.includes('envio') || t.includes('domicilio')) reply = 'Sí, envíos en un radio de 4 km en ~30 min. Pide desde la carta.';
     else if (t.includes('hola') || t.includes('buenas')) reply = '¡Hola! ¿Qué te damos hoy? Toca una opción o escríbeme.';
@@ -370,7 +348,6 @@
     setTimeout(() => {
       chips([
         { label: 'Quiero pedir', run: askCart },
-        { label: 'Reservar mesa', run: () => { bot('Te llevo a la reserva:'); setTimeout(() => go('#reserva'), 350); } },
         { label: '¿Horario?', run: () => bot('Abierto de ' + (DATA && DATA.horario ? DATA.horario : '8:00 a 22:00') + ', todos los días.') },
       ]);
     }, 150);

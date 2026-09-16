@@ -245,20 +245,6 @@ html:not(.js) .hero-img { opacity: 1; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast[hidden] { display: none; }
 
-/* ---------- reserva ---------- */
-.resv-card {
-  max-width: 640px; margin: 0 auto; background: var(--card); border: 1px solid var(--line);
-  border-radius: 20px; padding: 30px; box-shadow: var(--shadow);
-}
-.resv-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 24px; }
-.resv-card label { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 0.86rem; color: var(--coffee); }
-.sel {
-  font-family: var(--body); font-weight: 700; font-size: 1rem; color: var(--espresso);
-  border: 1.5px solid var(--line); border-radius: 12px; padding: 13px 14px; background: var(--paper);
-}
-.sel:focus { outline: 2px solid var(--terra); }
-.resv-note { margin-top: 14px; color: var(--mocha); font-size: 0.88rem; }
-
 /* ---------- chat ---------- */
 .chat {
   position: fixed; right: 18px; bottom: 160px; z-index: 90; width: min(360px, calc(100vw - 36px));
@@ -326,7 +312,6 @@ html:not(.js) .hero-img { opacity: 1; }
   .walk-track { display: none; }
   .room-hot { right: 16px; bottom: 8vh; }
   .menu { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
-  .resv-grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }

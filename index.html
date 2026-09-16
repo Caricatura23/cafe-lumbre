@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Café Lumbre · Entra, recorre y pide en línea | Tu marca</title>
-<meta name="description" content="Recorre nuestro café en 3D, mira la carta en línea, reserva tu mesa y pide por WhatsApp. El café que se vive antes de llegar." />
+<meta name="description" content="Recorre nuestro café en 3D, mira la carta en línea y pide por WhatsApp. El café que se vive antes de llegar." />
 <meta name="theme-color" content="#f4ecdf" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="canonical" href="https://cafe-lumbre.vercel.app/" />
@@ -13,7 +13,7 @@
 <meta property="og:locale" content="es_MX" />
 <meta property="og:site_name" content="Café Lumbre" />
 <meta property="og:title" content="Café Lumbre · Entra, recorre y pide en línea" />
-<meta property="og:description" content="Recorrido inmersivo por el café, carta digital, reservas y pedidos por WhatsApp." />
+<meta property="og:description" content="Recorrido inmersivo por el café, carta digital y pedidos por WhatsApp." />
 <meta property="og:url" content="https://cafe-lumbre.vercel.app/" />
 
 <script type="application/ld+json">
@@ -47,7 +47,6 @@
   <div class="nav-links">
     <a href="#recorre">Recorre</a>
     <a href="#carta">Carta</a>
-    <a href="#reserva">Reserva</a>
     <a href="#visita" class="nav-cta">Pedir en línea</a>
   </div>
 </nav>
@@ -73,7 +72,7 @@
   <div class="walk-head">
     <p class="kicker">El recorrido</p>
     <h2>Pasa por cada rincón <em>antes de ir.</em></h2>
-    <p class="walk-sub">Toca los puntos calientes para pedir, reservar o ver más.</p>
+    <p class="walk-sub">Toca los puntos calientes para pedir o ver más.</p>
   </div>
 
   <div class="walk-scene" id="walkScene">
@@ -94,7 +93,6 @@
         <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1400&q=80&auto=format&fit=crop" alt="El Salón" loading="lazy" />
         <div class="room-hot">
           <button class="hot" data-add="Croissant de almendra" data-price="65"><span>◉</span> Croissant <b>$65</b></button>
-          <button class="hot" data-book="Salón"><span>◐</span> Reservar mesa en salón</button>
         </div>
         <div class="room-cap">
           <b class="room-n">02</b>
@@ -105,7 +103,6 @@
       <div class="room" data-room="2">
         <img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=1400&q=80&auto=format&fit=crop" alt="La Terraza" loading="lazy" />
         <div class="room-hot">
-          <button class="hot" data-book="Terraza"><span>◐</span> Reservar mesa en terraza</button>
           <button class="hot" data-add="Cold brew tinto" data-price="65"><span>◉</span> Cold brew <b>$65</b></button>
         </div>
         <div class="room-cap">
@@ -118,7 +115,6 @@
         <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1400&q=80&auto=format&fit=crop" alt="La Cocina" loading="lazy" />
         <div class="room-hot">
           <button class="hot" data-add="Sándwich de pavo ahumado" data-price="120"><span>◉</span> Sándwich <b>$120</b></button>
-          <button class="hot" data-book="Barra"><span>◐</span> Sentarme en la barra</button>
         </div>
         <div class="room-cap">
           <b class="room-n">04</b>
@@ -161,42 +157,6 @@
   <p class="banner" id="stateBanner" hidden></p>
 
   <div class="menu reveal" id="menu"></div>
-</section>
-
-<!-- ================= RESERVA ================= -->
-<section class="wrap section" id="reserva">
-  <div class="section-head">
-    <p class="kicker">Reservación</p>
-    <h2>Aparta tu mesa <em>en 20 segundos.</em></h2>
-  </div>
-
-  <div class="resv-card reveal">
-    <div class="resv-grid">
-      <label>Zona
-        <select id="rZona" class="sel">
-          <option value="Salón">Salón</option>
-          <option value="Terraza">Terraza</option>
-          <option value="Barra">Barra</option>
-        </select>
-      </label>
-      <label>Día
-        <input id="rDay" class="sel" type="date" />
-      </label>
-      <label>Hora
-        <select id="rHour" class="sel">
-          <option>12:00</option><option>13:00</option><option>15:00</option>
-          <option>17:00</option><option>19:00</option><option>20:30</option>
-        </select>
-      </label>
-      <label>Personas
-        <select id="rPeople" class="sel">
-          <option>1</option><option>2</option><option>3</option><option>4</option><option>6</option><option>8+</option>
-        </select>
-      </label>
-    </div>
-    <button class="btn btn-solid big" id="rSend" type="button">Confirmar por WhatsApp</button>
-    <p class="resv-note">Confirmamos en menos de 10 min en horario de atención.</p>
-  </div>
 </section>
 
 <!-- ================= CTA FINAL ================= -->
