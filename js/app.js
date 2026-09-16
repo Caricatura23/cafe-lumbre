@@ -3,7 +3,7 @@
 
   const WA = '52155XXXXXXXX';
   const SHEET_URL = '';
-  const CSV_URL = '';
+  const CSV_URL = 'https://docs.google.com/spreadsheets/d/1owKb8f4l_wjlmh2Sko4mFEbkyiekCYEm6ka5oozy3zo/export?format=csv';
   const REFRESH_MS = 30000;
 
   const $ = (s, c) => (c || document).querySelector(s);
