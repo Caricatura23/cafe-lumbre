@@ -4,6 +4,10 @@
   "showPrices": true,
   "horario": "8:00 a 22:00, de lunes a domingo",
   "nota": "Pedidos fuera de horario se atienden al abrir.",
+  "config": {
+    "wa": "5215512345678",
+    "email": "hola@cafelumbre.mx"
+  },
   "items": [
     { "name": "Espresso doble", "tag": "Espresso", "desc": "Café de Chiapas · taza 6 oz · crema densa", "price": 55, "img": "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=900&q=80&auto=format&fit=crop", "available": true },
     { "name": "Latte de lavanda", "tag": "Firma de la casa", "desc": "Doble shot · leche vaporizada · lavanda de Veracruz", "price": 85, "img": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900&q=80&auto=format&fit=crop", "available": true },

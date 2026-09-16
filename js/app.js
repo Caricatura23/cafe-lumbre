@@ -1,10 +1,27 @@
 (function () {
   'use strict';
 
-  const WA = '52155XXXXXXXX';
+  let WA = '5215512345678';
+  let WA_LIST = ['5215512345678'];
+  let EMAILS = [];
   const SHEET_URL = '';
   const CSV_URL = 'https://docs.google.com/spreadsheets/d/1owKb8f4l_wjlmh2Sko4mFEbkyiekCYEm6ka5oozy3zo/export?format=csv';
   const REFRESH_MS = 30000;
+
+  function abrirWhatsApp(msg) {
+    const txt = encodeURIComponent(msg);
+    WA_LIST.forEach((num, i) => {
+      setTimeout(() => window.open('https://wa.me/' + num + '?text=' + txt, '_blank', 'noopener'), i * 600);
+    });
+  }
+
+  function applyConfig(cfg) {
+    if (!cfg) return;
+    const nums = [];
+    ['wa', 'wa1', 'wa2', 'wa3'].forEach((k) => { const v = String(cfg[k] || '').replace(/[^0-9]/g, ''); if (v && v.length >= 10) nums.push(v); });
+    if (nums.length) { WA = nums[0]; WA_LIST = nums; }
+    EMAILS = ['email', 'email1', 'email2'].map((k) => String(cfg[k] || '').trim()).filter(Boolean);
+  }
 
   const $ = (s, c) => (c || document).querySelector(s);
   const $$ = (s, c) => Array.prototype.slice.call((c || document).querySelectorAll(s));
@@ -67,7 +84,7 @@
     let msg = 'Hola, quiero mi pedido en ' + (DATA && DATA.nombre ? DATA.nombre : 'su negocio') + ':\n' + lines;
     if (withPrices) msg += '\nTotal: ' + money(cart.reduce((a, b) => a + b.price, 0));
     msg += '\n¿Confirmas y me indicas cómo pago?';
-    window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    abrirWhatsApp(msg);
   });
 
   /* ---------------- avisos ---------------- */
@@ -231,11 +248,21 @@
     if (cur !== '' || row.length) { row.push(cur.trim()); rows.push(row); }
     return rows;
   }
-  function itemsFromSheet(rows) {
+  function parseCarta(rows) {
     const items = [];
+    const config = {};
+    let inConfig = false;
     for (let i = 1; i < rows.length; i++) {
       const r = rows[i];
       if (!r || !r[0]) continue;
+      const head = String(r[0]).trim().toUpperCase();
+      if (head === 'CONFIG') { inConfig = true; continue; }
+      if (inConfig) {
+        const k = String(r[0]).trim().toLowerCase();
+        const v = (r[1] || '').trim();
+        if (k && v) config[k] = v;
+        continue;
+      }
       const price = Number((r[3] || '').replace(/[^0-9.]/g, ''));
       const av = String(r[5] || 'si').trim().toLowerCase();
       items.push({
@@ -245,27 +272,28 @@
         available: !(av === 'no' || av === 'n' || av === 'false' || av === '0' || av === 'agotado'),
       });
     }
-    return items;
+    return { items, config };
   }
 
   async function fetchData() {
     let src = null;
     if (SHEET_URL) {
-      try { const r = await fetch(SHEET_URL, { cache: 'no-store' }); if (r.ok) src = { items: (await r.json()).items }; } catch (e) { src = null; }
+      try { const r = await fetch(SHEET_URL, { cache: 'no-store' }); if (r.ok) src = await r.json(); } catch (e) { src = null; }
     }
     if (!src && CSV_URL) {
       try {
-        const r = await fetch(CSV_URL, { cache: 'no-store' });
-        if (r.ok) src = { items: itemsFromSheet(parseCSV(await r.text())) };
+        const r = await fetch(CSV_URL + '?t=' + Date.now(), { cache: 'no-store' });
+        if (r.ok) src = parseCarta(parseCSV(await r.text()));
       } catch (e) { src = null; }
     }
     if (!src || !src.items || !src.items.length) {
       try {
         const r = await fetch('negocio.json?t=' + Date.now(), { cache: 'no-store' });
-        if (r.ok) src = await r.json();
+        if (r.ok) { src = await r.json(); if (src.config) applyConfig(src.config); }
       } catch (e) { src = null; }
     }
     if (!src || !src.items || !src.items.length) return;
+    if (src.config) applyConfig(src.config);
     src.items = src.items.filter((i) => i && i.name);
     DATA = src;
     renderMenu();
