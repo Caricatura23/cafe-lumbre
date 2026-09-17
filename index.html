@@ -21,11 +21,71 @@
   "@context": "https://schema.org",
   "@type": "CafeOrCoffeeShop",
   "name": "Café Lumbre",
-  "description": "Café de especialidad con recorrido inmersivo, carta digital y pedidos por WhatsApp.",
+  "description": "Café de especialidad con recorrido inmersivo, carta digital y pedidos por WhatsApp. Envíos a domicilio en un radio de 4 km.",
   "url": "https://cafe-lumbre.vercel.app/",
   "telephone": "+5255XXXXXXXX",
   "priceRange": "$",
-  "openingHours": "Mo-Su 08:00-22:00"
+  "servesCuisine": "Café de especialidad, repostería",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Av. Ejemplo 123, Col. Roma Norte",
+    "addressLocality": "Ciudad de México",
+    "postalCode": "06700",
+    "addressRegion": "CDMX",
+    "addressCountry": "MX"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 19.4194,
+    "longitude": -99.1636
+  },
+  "areaServed": "Radio de 4 km alrededor del local",
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "08:00",
+    "closes": "22:00"
+  },
+  "hasMenu": "https://cafe-lumbre.vercel.app/#carta",
+  "sameAs": ["https://wa.me/52155XXXXXXXX", "https://www.instagram.com/TU_USUARIO", "https://www.facebook.com/TU_PAGINA"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Cómo puedo pedir en Café Lumbre?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Checa nuestra carta en línea, arma tu pedido y se envía directo a nuestro WhatsApp para confirmar disponibilidad, total y forma de pago." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hacen envíos a domicilio?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí, entregamos en un radio de 4 km en aproximadamente 30 minutos. Arma tu pedido desde la carta y confírmalo por WhatsApp." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es el horario de Café Lumbre?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Abrimos todos los días de 08:00 a 22:00 horas." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuánto cuesta un espresso en Café Lumbre?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nuestro espresso de especialidad parte desde $45 MXN. Consulta la carta en línea para ver el menú completo con precios." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Aceptan pago en línea o solo efectivo?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Confirmamos tu pedido por WhatsApp y ahí acordamos la forma de pago: efectivo o transferencia." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Dónde está ubicado Café Lumbre?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nos encontramos en Av. Ejemplo 123, Col. Roma Norte, Ciudad de México. Abrimos todos los días de 08:00 a 22:00." }
+    }
+  ]
 }
 </script>
 
@@ -168,6 +228,40 @@
     <h2>Tu café te espera.</h2>
     <p class="cta-text">Elige de la carta, paga en línea y llega a la barra — o lo llevamos a tu casa.</p>
     <a class="btn btn-solid big" href="#carta">Ver carta y pedir</a>
+  </div>
+</section>
+
+<!-- ================= FAQ (GEO: preguntas reales que los clientes buscan) ================= -->
+<section class="wrap section" id="faq">
+  <div class="section-head">
+    <p class="kicker">Preguntas frecuentes</p>
+    <h2>Resolvemos lo que <em>todos</em> preguntan.</h2>
+  </div>
+  <div class="faq-list">
+    <details>
+      <summary>¿Cómo puedo pedir en Café Lumbre?</summary>
+      <p>Checa nuestra carta en línea, arma tu pedido y se envía directo a nuestro WhatsApp para confirmar disponibilidad, total y forma de pago.</p>
+    </details>
+    <details>
+      <summary>¿Hacen envíos a domicilio?</summary>
+      <p>Sí, entregamos en un radio de 4 km en aproximadamente 30 minutos. Arma tu pedido desde la carta y confírmalo por WhatsApp.</p>
+    </details>
+    <details>
+      <summary>¿Cuál es el horario de Café Lumbre?</summary>
+      <p>Abrimos todos los días de 08:00 a 22:00 horas.</p>
+    </details>
+    <details>
+      <summary>¿Cuánto cuesta un espresso en Café Lumbre?</summary>
+      <p>Nuestro espresso de especialidad parte desde $45 MXN. Consulta la carta en línea para ver el menú completo con precios.</p>
+    </details>
+    <details>
+      <summary>¿Aceptan pago en línea o solo efectivo?</summary>
+      <p>Confirmamos tu pedido por WhatsApp y ahí acordamos la forma de pago: efectivo o transferencia.</p>
+    </details>
+    <details>
+      <summary>¿Dónde está ubicado Café Lumbre?</summary>
+      <p>Nos encontramos en Av. Ejemplo 123, Col. Roma Norte, Ciudad de México. Abrimos todos los días de 08:00 a 22:00.</p>
+    </details>
   </div>
 </section>
 

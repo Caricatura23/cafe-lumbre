@@ -242,6 +242,27 @@ html:not(.js) .hero-img { opacity: 1; }
 .mi-price.na { font-family: var(--body); font-size: 0.9rem; font-weight: 700; color: var(--mocha); }
 
 /* estado del negocio + avisos */
+
+/* ---------- FAQ (GEO) ---------- */
+.faq-list { display: grid; gap: 12px; max-width: 760px; }
+.faq-list details {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 18px 22px; cursor: pointer; transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.faq-list details:hover { border-color: var(--gold); }
+.faq-list details[open] { border-color: var(--gold); box-shadow: var(--shadow); }
+.faq-list summary {
+  font-family: var(--disp); font-weight: 800; font-size: 1.05rem; color: var(--ink);
+  list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after {
+  content: '+'; font-size: 1.3rem; font-weight: 800; color: var(--gold); transition: transform 0.2s var(--ease);
+}
+.faq-list details[open] summary::after { transform: rotate(45deg); }
+.faq-list details p { margin: 12px 0 0; color: var(--mocha); font-size: 0.95rem; line-height: 1.55; }
+
+/* estado del negocio + avisos */
 .banner {
   display: block; max-width: 640px; margin: 0 auto 18px; text-align: center;
   background: #f6e3d4; border: 1px solid var(--terra); color: var(--espresso);
